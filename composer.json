@@ -21,7 +21,10 @@
   },
   "autoload": {
     "psr-0": {
-      "Danganf": "src/"
-    }
+      "Danganf": "src/Danganf/"
+    },
+    "files": [
+      "src/app/Helpers/helpers.php"
+    ]
   }
 }

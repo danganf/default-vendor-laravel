@@ -1,6 +1,6 @@
 <?php
 
-namespace App\MyClass\Json\Contracts;
+namespace Danganf;
 
 use App\Exceptions\ApiException;
 

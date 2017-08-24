@@ -1,6 +1,6 @@
 <?php
 
-namespace App\MyClass\Contracts;
+namespace Danganf;
 
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
