@@ -1,0 +1,30 @@
+{
+  "name": "danganf/default-vendor-laravel",
+  "description": "Default files for Laravel",
+  "type": "library",
+  "license": "MIT",
+  "keywords": [
+    "laravel",
+    "auth"
+  ],
+  "authors": [
+    {
+      "name":     "Daniel Azevedo",
+      "email":    "danielazevedo2k12@gmail.com",
+      "homepage": "https://github.com/danganf"
+    }
+  ],
+  "require": {
+    "php": ">=5.4.0",
+    "illuminate/support": "~5.0"
+  },
+  "require-dev": {
+    "mockery/mockery": "dev-master"
+  },
+  "autoload": {
+    "psr-0": {
+      "Danganf": "src/"
+    }
+  },
+  "minimum-stability": "stable"
+}
