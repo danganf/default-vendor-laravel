@@ -1,8 +1,8 @@
 <?php
 
-namespace Danganf;
+namespace Danganf\MyClass\Contracts;
 
-abstract class DependencyFiles
+class DependencyFiles
 {
     protected $routename;
     protected $js  = [];
@@ -12,7 +12,7 @@ abstract class DependencyFiles
         $this->routename = ucfirst( camel_case( str_replace('.','_',$routeName ) ) );
     }
 
-    public function render(){//dd($this->routename);
+    final public function render(){//dd($this->routename);
 
         if( method_exists( $this, 'route' . $this->routename ) ){
             call_user_func_array(array($this,'route' . $this->routename),[]);

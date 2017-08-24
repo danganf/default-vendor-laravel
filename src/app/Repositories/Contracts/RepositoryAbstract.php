@@ -1,6 +1,6 @@
 <?php
 
-namespace Danganf;
+namespace Danganf\Repositories\Contracts;
 
 abstract class RepositoryAbstract implements RepositoryInterface
 {

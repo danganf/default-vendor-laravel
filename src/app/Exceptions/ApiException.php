@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Exceptions;
+namespace Danganf\Exceptions;
 
 use Exception;
 
