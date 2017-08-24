@@ -19,9 +19,6 @@
     "illuminate/support": "~5.0",
     "danganf/laracasts-flash": "~2.0"
   },
-  "require-dev": {
-    "mockery/mockery": "dev-master"
-  },
   "autoload": {
     "psr-0": {
       "Danganf": "src/"
