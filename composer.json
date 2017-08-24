@@ -16,7 +16,8 @@
   ],
   "require": {
     "php": ">=5.4.0",
-    "illuminate/support": "~5.0"
+    "illuminate/support": "~5.0",
+    "danganf/laracasts-flash": ">=2.*"
   },
   "require-dev": {
     "mockery/mockery": "dev-master"
