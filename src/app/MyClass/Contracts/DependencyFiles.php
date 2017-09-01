@@ -2,7 +2,7 @@
 
 namespace Danganf\MyClass\Contracts;
 
-class DependencyFiles
+abstract class DependencyFiles
 {
     protected $routename;
     protected $js  = [];
@@ -22,7 +22,7 @@ class DependencyFiles
 
     }
 
-    private function add( $section, $files ){
+    protected function add( $section, $files ){
         $this->{$section}[] = $files;
     }
 }

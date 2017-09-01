@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Session;
 
 abstract class SessionOpen
 {
-    private $nameSession='userDados';
+    private $nameSession='userData';
 
     public function __construct()
     {

@@ -57,8 +57,8 @@ function getRouteName() {
     return \Illuminate\Support\Facades\Route::currentRouteName();
 }
 
-function getRoutePrefixName() {
-    return \Illuminate\Support\Facades\Route::getCurrentRoute()->getPrefix();
+function getRoutePrefixName( $clean = ['/'] ) {
+    return str_replace( $clean, '', \Illuminate\Support\Facades\Route::getCurrentRoute()->getPrefix() );
 }
 
 function nameMenuAction( $nivel = 1 ){
