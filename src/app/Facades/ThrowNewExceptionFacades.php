@@ -1,6 +1,6 @@
 <?php
 
-namespace IntercaseDefault\Facades;
+namespace Danganf\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
@@ -17,6 +17,6 @@ class ThrowNewExceptionFacades extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'IntercaseDefault\MyClass\ThrowNewException';
+        return 'Danganf\MyClass\ThrowNewException';
     }
 }

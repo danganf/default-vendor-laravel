@@ -3,7 +3,7 @@
 namespace App\Repositories;
 
 use App\Model\User;
-use IntercaseDefault\Repositories\Contracts\RepositoryAbstract;
+use Danganf\Repositories\Contracts\RepositoryAbstract;
 
 class UserRepository extends RepositoryAbstract
 {

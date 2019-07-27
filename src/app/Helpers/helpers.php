@@ -623,7 +623,7 @@ function convert_string_float($value)
 function create_qr_code($arrayValue=[])
 {
     $arrayValue = is_array( $arrayValue ) ? $arrayValue : [$arrayValue];
-    $mycript    = new \IntercaseDefault\MyClass\MyCript();
+    $mycript    = new \Danganf\MyClass\MyCript();
     return $mycript->encode(config('app.key_crypt'),implode(',',$arrayValue));
 }
 
@@ -639,7 +639,7 @@ function only_string( $string ){
 
 function get_qr_code($value)
 {
-    $mycript = new \IntercaseDefault\MyClass\MyCript();
+    $mycript = new \Danganf\MyClass\MyCript();
     $decode  = $mycript->decode(config('app.key_crypt'),$value);
     return $decode ? current( explode(',', $decode) ) : FALSE;
 }

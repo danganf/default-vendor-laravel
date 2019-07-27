@@ -1,6 +1,6 @@
 <?php
 
-namespace IntercaseDefault\Exceptions;
+namespace Danganf\Exceptions;
 
 use Exception;
 

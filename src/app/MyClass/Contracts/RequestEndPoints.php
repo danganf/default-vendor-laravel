@@ -1,11 +1,11 @@
 <?php
 
-namespace IntercaseDefault\MyClass\Contracts;
+namespace Danganf\MyClass\Contracts;
 
 use App\MyClass\Json\JsonBasic;
-use IntercaseDefault\Facades\ThrowNewExceptionFacades;
-use IntercaseDefault\MyClass\AbstractDefaultCache;
-use IntercaseDefault\MyClass\Curl;
+use Danganf\Facades\ThrowNewExceptionFacades;
+use Danganf\MyClass\AbstractDefaultCache;
+use Danganf\MyClass\Curl;
 use Validator;
 
 abstract class RequestEndPoints

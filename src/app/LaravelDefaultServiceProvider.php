@@ -1,6 +1,6 @@
 <?php
 
-namespace IntercaseDefault;
+namespace Danganf;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -25,9 +25,9 @@ class LaravelDefaultServiceProvider extends ServiceProvider
 
         #FACADES
         $app = \Illuminate\Foundation\AliasLoader::getInstance();
-        $app->alias('IntercaseValidator', 'IntercaseDefault\Facades\IntercaseValidatorFacades');
-        $app->alias('ThrowNew'          , 'IntercaseDefault\Facades\ThrowNewExceptionFacades');
-        $app->alias('LogDebug'          , 'IntercaseDefault\Facades\LogDebugFacades');
+        $app->alias('DanganfValidator', 'Danganf\Facades\DanganfValidatorFacadess');
+        $app->alias('ThrowNew'        , 'Danganf\Facades\ThrowNewExceptionFacades');
+        $app->alias('LogDebug'        , 'Danganf\Facades\LogDebugFacades');
     }
 
     /**

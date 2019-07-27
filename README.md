@@ -6,7 +6,7 @@
 ```php
 'providers' => [
 
-IntercaseDefault\LaravelDefaultServiceProvider::class,
+Danganf\LaravelDefaultServiceProvider::class,
 
 ],
 ```
@@ -14,5 +14,5 @@ IntercaseDefault\LaravelDefaultServiceProvider::class,
 2. Publique os pacotes.
 
 ```
-php artisan vendor:publish --provider="IntercaseDefault\LaravelDefaultServiceProvider"
+php artisan vendor:publish --provider="Danganf\LaravelDefaultServiceProvider"
 ```

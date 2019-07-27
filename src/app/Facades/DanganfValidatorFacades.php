@@ -1,6 +1,6 @@
 <?php
 
-namespace IntercaseDefault\Facades;
+namespace Danganf\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Facade;
  * Class ThrowNewExceptionFacades
  * @package App\Facades
  */
-class IntercaseValidatorFacades extends Facade
+class DanganfValidatorFacades extends Facade
 {
     /**
      * Get the registered name of the component.
@@ -17,6 +17,6 @@ class IntercaseValidatorFacades extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'IntercaseDefault\MyClass\Validator';
+        return 'Danganf\MyClass\Validator';
     }
 }

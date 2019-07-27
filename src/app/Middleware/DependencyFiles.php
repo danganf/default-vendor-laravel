@@ -1,5 +1,5 @@
 <?php
-namespace IntercaseDefault\Middleware;
+namespace Danganf\Middleware;
 
 use Closure;
 

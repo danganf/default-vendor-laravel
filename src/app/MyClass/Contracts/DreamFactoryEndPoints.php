@@ -1,16 +1,16 @@
 <?php
 
-namespace IntercaseDefault\MyClass\Contracts;
+namespace Danganf\MyClass\Contracts;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use IntercaseDefault\Facades\ThrowNewExceptionFacades;
-use IntercaseDefault\MyClass\Curl;
-use IntercaseDefault\MyClass\Json\Contracts\JsonAbstract;
+use Danganf\Facades\ThrowNewExceptionFacades;
+use Danganf\MyClass\Curl;
+use Danganf\MyClass\Json\Contracts\JsonAbstract;
 
 /**
  * Class DreamFactoryEndPoints
- * @package IntercaseDefault\MyClass\Contracts
+ * @package Danganf\MyClass\Contracts
  */
 abstract class DreamFactoryEndPoints
 {
@@ -695,7 +695,7 @@ abstract class DreamFactoryEndPoints
             foreach ( explode(',', $arrayFilter['categories']) as $id ){$where .= "(categories like '%@$id|%')or";}
             $this->setFilter(rtrim($where,'or'));
         }
-        
+
         #feito dessa forma, pq o zero deve ser considerado
         if( !empty( array_get( $arrayFilter, 'tags' ) ) ){
             $where = '';
@@ -738,7 +738,7 @@ abstract class DreamFactoryEndPoints
     private function getUrlService(){
         $keyCache = 'getUrl_'.$this->proxyServiceName;
         if( !$this->cache->has( $keyCache ) ) {
-            $curl              = new \IntercaseDefault\MyClass\Curl();
+            $curl              = new \Danganf\MyClass\Curl();
             $url               = config('magaliapi.proxy_df_url')."services_proxy/_table/services?fields=url&filter=slug='$this->proxyServiceName'";
             $options['header'] = $this->header;
             $return            = $curl->send($url, $options);//dd($return,'priscila',$url,$options);

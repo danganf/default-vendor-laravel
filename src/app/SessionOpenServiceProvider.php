@@ -1,6 +1,6 @@
 <?php
 
-namespace IntercaseDefault;
+namespace Danganf;
 
 use App\MyClass\SessionOpen;
 use Illuminate\Support\ServiceProvider;

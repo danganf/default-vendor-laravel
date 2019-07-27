@@ -1,8 +1,8 @@
 <?php
 
-namespace IntercaseDefault\MyClass\Json\Contracts;
+namespace Danganf\MyClass\Json\Contracts;
 
-use IntercaseDefault\Exceptions\ApiException;
+use Danganf\Exceptions\ApiException;
 
 class JsonAbstract
 {

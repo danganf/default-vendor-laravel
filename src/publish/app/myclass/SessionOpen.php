@@ -2,7 +2,7 @@
 
 namespace App\MyClass;
 
-class SessionOpen extends \IntercaseDefault\MyClass\Contracts\SessionOpen
+class SessionOpen extends \Danganf\MyClass\Contracts\SessionOpen
 {
 
 }

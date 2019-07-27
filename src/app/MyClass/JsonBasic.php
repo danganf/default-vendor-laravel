@@ -1,9 +1,9 @@
 <?php
 
-namespace IntercaseDefault\MyClass;
+namespace Danganf\MyClass;
 
-use IntercaseDefault\MyClass\Json\Contracts\JsonAbstract;
-use IntercaseDefault\MyClass\Json\Contracts\JsonInterface;
+use Danganf\MyClass\Json\Contracts\JsonAbstract;
+use Danganf\MyClass\Json\Contracts\JsonInterface;
 
 class JsonBasic extends JsonAbstract implements JsonInterface
 {

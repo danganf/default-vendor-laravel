@@ -1,6 +1,6 @@
 <?php
 
-namespace IntercaseDefault\MyClass;
+namespace Danganf\MyClass;
 
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;

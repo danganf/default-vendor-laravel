@@ -1,6 +1,6 @@
 <?php
 
-namespace IntercaseDefault\MyClass\Json\Contracts;
+namespace Danganf\MyClass\Json\Contracts;
 
 interface JsonInterface
 {

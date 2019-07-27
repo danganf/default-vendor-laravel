@@ -1,9 +1,9 @@
 <?php
 
-namespace IntercaseDefault\MyClass;
+namespace Danganf\MyClass;
 
 use Illuminate\Http\Request;
-use IntercaseDefault\Facades\ThrowNewExceptionFacades;
+use Danganf\Facades\ThrowNewExceptionFacades;
 
 class CoreConfigData
 {

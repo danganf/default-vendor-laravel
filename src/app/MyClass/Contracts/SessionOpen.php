@@ -1,6 +1,6 @@
 <?php
 
-namespace IntercaseDefault\MyClass\Contracts;
+namespace Danganf\MyClass\Contracts;
 
 use Illuminate\Support\Facades\Session;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace IntercaseDefault\MyClass;
+namespace Danganf\MyClass;
 
 use Carbon\Carbon;
 
