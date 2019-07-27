@@ -2,12 +2,18 @@
 
 namespace Danganf\Repositories\Contracts;
 
+use Illuminate\Support\Facades\App;
+
 abstract class RepositoryAbstract implements RepositoryInterface
 {
     private $model;
 
     function __construct( $modelBind, $model=null )
     {
+        if( !is_object( $modelBind ) ) {
+            $modelBind = App::make('App\Model\\' . str_replace('Repository', '', last(explode('\\', $modelBind))));
+        }
+
         if ( !$model instanceof $modelBind ) {
             $model = new $modelBind();
         }
