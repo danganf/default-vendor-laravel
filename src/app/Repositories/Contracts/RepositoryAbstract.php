@@ -1,6 +1,6 @@
 <?php
 
-namespace Danganf\Repositories\Contracts;
+namespace IntercaseDefault\Repositories\Contracts;
 
 abstract class RepositoryAbstract implements RepositoryInterface
 {
@@ -30,9 +30,9 @@ abstract class RepositoryAbstract implements RepositoryInterface
         return $this;
     }
 
-    public function get( $campo )
+    public function get( $campo, $returnDefault=FALSE )
     {
-        $valor = ( isset ( $this->model->$campo ) ? $this->model->$campo : FALSE );
+        $valor = ( isset ( $this->model->$campo ) ? $this->model->$campo : $returnDefault );
 
         return $valor;
     }

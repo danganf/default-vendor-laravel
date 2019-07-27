@@ -1,6 +1,6 @@
 <?php
 
-namespace Danganf\Repositories\Contracts;
+namespace IntercaseDefault\Repositories\Contracts;
 
 interface RepositoryInterface
 {

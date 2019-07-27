@@ -1,6 +1,6 @@
 <?php
 
-namespace Danganf\MyClass\Contracts;
+namespace IntercaseDefault\MyClass\Contracts;
 
 use Illuminate\Support\Facades\Session;
 
@@ -13,7 +13,7 @@ abstract class SessionOpen
 
     }
 
-    public function setTag($nome){
+    public function setTag($nome=null){
         if( !empty( $nome ) ) {
             $this->nameSession = $nome;
         }

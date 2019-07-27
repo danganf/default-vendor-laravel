@@ -1,6 +1,6 @@
 <?php
 
-namespace Danganf\MyClass\Contracts;
+namespace IntercaseDefault\MyClass\Contracts;
 
 abstract class MyFilter
 {

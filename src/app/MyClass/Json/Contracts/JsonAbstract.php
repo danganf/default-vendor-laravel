@@ -1,8 +1,8 @@
 <?php
 
-namespace Danganf\MyClass\Json\Contracts;
+namespace IntercaseDefault\MyClass\Json\Contracts;
 
-use Danganf\Exceptions\ApiException;
+use IntercaseDefault\Exceptions\ApiException;
 
 class JsonAbstract
 {
@@ -54,13 +54,20 @@ class JsonAbstract
             $valor = null;
         }
 
-        $return = empty( $valor ) ? $this->returnGet : $valor;
+        $return = is_null( $valor ) ? $this->returnGet : $valor;
 
         if( $return  == $this->returnGet ) {
             $this->create( $property, $create );
         }
 
         return $return;
+    }
+
+    public function has($property){
+
+        $json = $this->json;
+        if( is_null($json) ) return FALSE;
+        return array_has( (array)$json, $property );
     }
 
     private function montaCall($property){

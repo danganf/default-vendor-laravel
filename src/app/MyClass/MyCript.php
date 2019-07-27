@@ -1,6 +1,6 @@
 <?php
 
-namespace Danganf\MyClass;
+namespace IntercaseDefault\MyClass;
 
 class MyCript
 {

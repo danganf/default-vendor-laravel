@@ -1,6 +1,6 @@
 <?php
 
-namespace Danganf\MyClass\Traits;
+namespace IntercaseDefault\MyClass\Traits;
 
 trait OpenViewController
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace Danganf\MyClass\Json\Contracts;
+namespace IntercaseDefault\MyClass\Json\Contracts;
 
 interface JsonInterface
 {
     public function set($stringJson);
-    public function validar($array);
+    public function validRequiredFields($array);
 }

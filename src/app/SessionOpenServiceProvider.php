@@ -1,6 +1,6 @@
 <?php
 
-namespace Danganf;
+namespace IntercaseDefault;
 
 use App\MyClass\SessionOpen;
 use Illuminate\Support\ServiceProvider;
@@ -24,10 +24,6 @@ class SessionOpenServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        /*        $this->app->bind('sessionopen', function(){
-                    return new SessionOpen();
-                });*/
-
         $this->app->singleton('SessionOpen', function () {
             return $this->app->make('App\MyClass\SessionOpen');
         });

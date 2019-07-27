@@ -1,16 +1,47 @@
 <?php
 
-function msgJson($arrai) {
-    return response()->json($arrai, '200', [ 'Content-Type' => 'application/json' ]);
+function msgJson($array,$code=200,$addHeader=[])
+{
+    $header = getAllowOrigins();
+    $header['Content-Type'] = 'application/json';
+
+    if( !empty( $addHeader ) ){
+        $header = array_merge( $header, $addHeader );
+    }
+    if( !empty( $array ) ) {
+        return response()->json($array, $code, $header);
+    }
+
+    return msgErroJson(\Lang::get('default.registers_not_found'), 404);
 }
 
-function msgErroJson($msg) {
-    return ['error'=>1,'messages'=>$msg];
+function msgErroJson($msg,$code=400) {
+
+    if( empty( \Request::header('X-Content-Type-Return') ) ) {
+        $header = getAllowOrigins();
+        $header['Content-Type'] = 'application/json';
+        return response()->json(['error' => 1, 'messages' => $msg], $code, $header);
+    }
+
+    if( is_array( $msg ) ) {
+        $msgTxt = array_has($msg, 'message') ? $msg['message'] : $msg;
+        $msgTxt = array_has($msg, 'detail')  ? $msg['detail']  : $msgTxt;
+    } else{
+        $msgTxt = $msg;
+    }
+
+    return msgErroTxt($msgTxt,$code);
 }
 
-function msgSuccessJson( $msg, $dados = [] ) {
+function msgErroTxt($msg,$code=400) {
+    $header = getAllowOrigins();
+    $header['Content-Type'] = 'text/plain';
+    return response($msg, $code)->withHeaders($header);
+}
+
+function msgSuccessJson( $msg, $dados = [], $code=200 ) {
     $dados['messages'] = $msg;
-    return $dados;
+    return msgJson($dados, $code);
 }
 
 function TransformaMaiscula ( &$item ) {
@@ -50,7 +81,11 @@ function objectToArray($d) {
 }
 
 function removeAcentos($string, $slug = false) {
-    return preg_replace(array("/(á|à|ã|â|ä)/","/(Á|À|Ã|Â|Ä)/","/(é|è|ê|ë)/","/(É|È|Ê|Ë)/","/(í|ì|î|ï)/","/(Í|Ì|Î|Ï)/","/(ó|ò|õ|ô|ö)/","/(Ó|Ò|Õ|Ô|Ö)/","/(ú|ù|û|ü)/","/(Ú|Ù|Û|Ü)/","/(ñ)/","/(Ñ)/"),explode(" ","a A e E i I o O u U n N"),$string);
+    return preg_replace(
+        array(
+                "/(á|à|ã|â|ä)/","/(Á|À|Ã|Â|Ä)/","/(é|è|ê|ë)/","/(É|È|Ê|Ë)/","/(í|ì|î|ï)/","/(Í|Ì|Î|Ï)/","/(ó|ò|õ|ô|ö)/","/(Ó|Ò|Õ|Ô|Ö)/","/(ú|ù|û|ü)/","/(Ú|Ù|Û|Ü)/","/(ñ)/","/(Ñ)/","/(ç)/","/(Ç)/"
+            ),
+        explode(" ","a A e E i I o O u U n N c C"),$string);
 }
 
 function getRouteName() {
@@ -72,6 +107,18 @@ function nameMenuAction( $nivel = 1 ){
 
 function isProduction() {
     return ( config('app.env') == 'production' ? TRUE : FALSE );
+}
+
+function isLocal() {
+    return ( config('app.env') == 'local' ? TRUE : FALSE );
+}
+
+function isHmg() {
+    return ( config('app.env') == 'hmg' ? TRUE : FALSE );
+}
+
+function isVPN() {
+    return ( config('app.vpn_on') ? TRUE : FALSE );
 }
 
 function isJson($string) {
@@ -101,12 +148,58 @@ function isOfValidClass($obj) {
     return false;
 }
 
-function convertData($data, $formatIn = 'DDMMYYY' ) {
+function justNumber(&$string){
+    $string = preg_replace("/[^0-9]/", "", $string);
+    return $string;
+}
+
+function daysBetWeenDates( $dateIn, $dateEnd ){
+    $days = null;
+    if( validateDate($dateIn, 'YYYMMDDHHMMSS') && validateDate($dateEnd, 'YYYMMDDHHMMSS') ){
+        $start = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $dateIn);
+        $end   = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $dateEnd);
+        $days = $end->diffInDays($start);
+    }
+    return $days;
+}
+
+function validateDate($date, $formatIn = 'DDMMYYY' ) {
+    $flag = false;
+    switch ( $formatIn ){
+        case 'DDMMYYY':
+                $date  = justNumber( $date );
+                $day   = substr($date, 0, 2);
+                $month = substr($date, 2, 2);
+                $year  = substr($date, -4);
+                $flag  = checkdate($month, $day, $year);
+                break;
+        case 'YYYMMDDHHMMSS':
+                $newdate = \Carbon\Carbon::createFromFormat( 'Y-m-d H:i:s', $date )->format('Y-m-d H:i:s');
+                $flag    = ($newdate == $date);
+                break;
+        default:
+            $day = $month = $year = null;
+            break;
+    }
+    return $flag;
+}
+
+/**
+ * @param $data
+ * @param string $formatIn
+ * @param bool $clear NAO vem com / ou -, somente numero
+ * @return string
+ */
+function convertData($data, $formatIn = 'DDMMYYY', $clear = false ) {
     $formatIn = strtoupper( $formatIn );
     $retorno  = $data;
     switch( $formatIn ) {
 
         case 'DDMMYYY':
+            if( $clear ){
+                justNumber($data);
+                $data = substr( $data, 0, 2 ) . '/' . substr( $data, 2, 2 ) . '/' . substr( $data, -4 );
+            }
             $retorno = \Carbon\Carbon::createFromFormat('d/m/Y', $data)->format('Y-m-d');
             break;
         case 'YYYMMDD':
@@ -114,7 +207,10 @@ function convertData($data, $formatIn = 'DDMMYYY' ) {
             break;
 
         case 'YYYMMDDHHMMSS':
-            $retorno = \Carbon\Carbon::parse( $data )->format('d/m/Y H:m:i');
+            $retorno = \Carbon\Carbon::parse( $data )->format('d/m/Y H:i:s');
+            break;
+        case 'DDMMYYYYHHMMSS':
+            $retorno = \Carbon\Carbon::createFromFormat( 'd/m/Y H:i:s', $data )->format('Y-m-d H:i:s');
             break;
 
     }
@@ -206,10 +302,10 @@ function getUserSession( $campo = null ){
  * @param  string|null      $param
  * @return string|array|bool
  */
-function sessionOpen($metodo,$param=null)
+function sessionOpen($metodo,$param=null,$scope=null)
 {
     $app = app('SessionOpen');
-    return $app->{$metodo}($param);
+    return $app->setTag($scope)->{$metodo}($param);
 }
 
 function getNameStatus( $status, $badge = FALSE ){
@@ -309,6 +405,23 @@ function pluckMatriz( $array, $idx, $setup=[] ){
     return $dados;
 }
 
+#extrair parte de uma matriz com base num determinado idx
+function removeInMatriz( $array, $idx ){
+
+    $idx = is_array( $idx ) ? $idx : [$idx];
+    foreach ( $array AS $key => $row ){
+
+        foreach ( $idx AS $idxRows ) {
+            if (array_has($row, $idxRows)) {
+                unset($row[$idxRows]);
+                $array[$key] = $row;
+            }
+        }
+    }
+
+    return $array;
+}
+
 function loadFiles( $fileName ){
 
     $cacheFile = "loadFiles_" . $fileName;
@@ -333,4 +446,284 @@ function getDiasSemanas(){
         'SAB' => 'Sábado',
         'DOM' => 'Domingo',
     ];
+}
+
+function getWeekMap($day=null){
+    $weekMap = [
+        0 => 'SU',
+        1 => 'MO',
+        2 => 'TU',
+        3 => 'WE',
+        4 => 'TH',
+        5 => 'FR',
+        6 => 'SA',
+    ];
+
+    return empty( $day ) ? $weekMap : ( $day >= 0 && $day < 7 ? $weekMap[$day] : null ) ;
+}
+
+function getdayOfTheWeek($initial=false){
+    $cabonNow  = \Carbon\Carbon::now();
+    $dayOfWeek = $cabonNow->dayOfWeek;
+    return !$initial ? $dayOfWeek : getWeekMap($dayOfWeek);
+}
+
+function getAllowOrigins(){
+
+    //$header['Access-Control-Allow-Origin' ]     = '*';
+    $header['Access-Control-Allow-Methods']     = 'GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS';
+    $header['Access-Control-Allow-Headers']     = 'Origin, X-Requested-With, Content-Type, Accept, Authorization, auth-user';
+    $header['access-control-max-age']           = 1728000;
+    $header['access-control-expose-headers']    = 'WWW-Authenticate, Server-Authorization';
+    $header['access-control-allow-credentials'] = true;
+    $header['P3P']                              = 'CP="CAO PSA OUR"'; // Makes IE to support cookies
+
+    #colocando o tempo restante do token (seconds)
+    $timeTokenTimeLeft = Request::get('token_time_left');
+    if( $timeTokenTimeLeft ){
+        $header['access-token-time-left']        = $timeTokenTimeLeft;
+        $header['Access-Control-Expose-Headers'] = 'access-token-time-left';
+    }
+
+    return $header;
+}
+
+function calcPercente($value, $total, $precision=1, $invert=false){
+
+    if( (string)$value === (string)$total ) return 0;
+
+    $return = ( $total > 0 ? round( ( !$invert ? 0 : 100 ) - ( ($value * 100) / $total ), $precision) : NULL );
+    $return = ( !is_null( $return ) ? number_format( $return, $precision ) : 0 );
+    return $return;
+}
+
+function generateRandomString($length = 0) {
+    $length = ( !empty( $length ) ? $length : rand(4,10) );
+    return substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)) )),1,$length);
+}
+
+function convert_data_in_row($row=[], $formatIn='YYYMMDDHHMMSS', $fields=['created_at','updated_at']){
+    foreach ( $fields as $field ){
+        if( is_array( $row ) ) {
+            if (key_exists($field, $row)) {
+                $updatedAt = $row[$field];
+                $row[$field] = convertData($updatedAt, $formatIn);
+            }
+        }
+    }
+    return $row;
+}
+
+function format_number($valor, $decimal=0, $money=false){
+
+    $dec_point     = ',';
+    $thousands_sep = '.';
+    if($money){
+        $dec_point     = '.';
+        $thousands_sep = ',';
+    }
+
+    return number_format($valor,$decimal, $dec_point, $thousands_sep);
+}
+
+function convert_price_in_row($row=[], $fields=['final_price','grand_total','discount_price','special_price', 'price']){
+    foreach ( $fields as $field ){
+        if( is_array( $row ) ) {
+            if (key_exists($field, $row) && !is_null( $row[$field] ) ) {
+                $row[$field] = format_number($row[$field], 2);
+            }
+        }
+    }
+    return $row;
+}
+
+function convert_data_in_array(&$arrayValues=[], $formatIn='YYYMMDDHHMMSS', $fields=['created_at','updated_at']){
+    $arrayValues = array_map(function ($row) use ($fields,$formatIn){
+        return convert_data_in_row($row,$formatIn, $fields);
+    },$arrayValues);
+
+    return $arrayValues;
+}
+
+function remove_key_in_array(&$array,$keys=[]){
+
+    $keys = is_array( $keys ) ? $keys : [$keys];
+
+    $array = array_map( function($row) use($keys) {
+        foreach ( $keys as $key ){
+            if(key_exists($key, $row)){
+                array_forget($row,$key);
+            }
+        }
+        return $row;
+    },$array);
+}
+
+function multiRenameKey(&$array, $old_keys, $new_keys,$processData=false,$formatPrice=false,$patternReturn=true)
+{
+    if(!is_array($array)){
+        ($array=="") ? $array=array() : false;
+        return $array;
+    }
+    foreach($array as &$arr){
+
+        if( $processData ){
+            $arr = convert_data_in_row($arr);
+        }
+
+        if( $formatPrice ){
+            $arr = convert_price_in_row($arr);
+        }
+
+        if (is_array($old_keys))
+        {
+            foreach($new_keys as $k => $new_key)
+            {
+                (isset($old_keys[$k])) ? true : $old_keys[$k] = NULL;
+                $valueTmp = (isset($arr[$old_keys[$k]]) ? $arr[$old_keys[$k]] : null);
+                if( !empty( $valueTmp ) ) {
+                    $tmp = (isset($arr[$old_keys[$k]]) ? $arr[$old_keys[$k]] : null);
+
+                    #padroninzando retornos de status
+                    if( $patternReturn && in_array( $new_key, [ 'status', 'in_app', 'is_input', 'in_home_app' ] ) ){$tmp = (boolean) $tmp;}
+
+                    $arr[$new_key] = $tmp;
+
+                    unset($arr[$old_keys[$k]]);
+
+                    if (is_array($arr[$new_key])) {
+                        multiRenameKey($arr[$new_key], $old_keys, $new_keys, $processData, $formatPrice,$patternReturn);
+                    }
+                } else {
+
+                    //dd( $arr, $valueTmp, $old_keys, $old_keys[$k] );
+                    if( !is_null($valueTmp) ){
+                        unset($arr[$old_keys[$k]]);
+                        $arr[$new_key] = $valueTmp;
+                    }
+                    /*if( is_array( $arr ) && is_array( $valueTmp ) ) {
+                        unset($arr[$old_keys[$k]]);
+                        $arr[$new_key] = $valueTmp;
+                    }*/
+                }
+            }
+        }else{
+            $arr[$new_keys] = (isset($arr[$old_keys]) ? $arr[$old_keys] : null);
+            unset($arr[$old_keys]);
+        }
+    }
+    return $array;
+}
+
+function convert_string_float($value)
+{
+    return !is_float( $value ) ? (float)str_replace(['.',','],['','.'],$value) : $value;
+}
+
+function create_qr_code($arrayValue=[])
+{
+    $arrayValue = is_array( $arrayValue ) ? $arrayValue : [$arrayValue];
+    $mycript    = new \IntercaseDefault\MyClass\MyCript();
+    return $mycript->encode(config('app.key_crypt'),implode(',',$arrayValue));
+}
+
+function only_number( $string ){
+    $string = !empty( $string ) ? preg_replace("/[^0-9]/", "", $string ) : null;
+    return $string;
+}
+
+function only_string( $string ){
+    $string = !empty( $string ) ? preg_replace("/\d/", "", $string ) : null;
+    return $string;
+}
+
+function get_qr_code($value)
+{
+    $mycript = new \IntercaseDefault\MyClass\MyCript();
+    $decode  = $mycript->decode(config('app.key_crypt'),$value);
+    return $decode ? current( explode(',', $decode) ) : FALSE;
+}
+
+function search_in_array($array, $key, $search)
+{
+    $search = !is_array( $search ) ? [$search] : $search;
+
+    return array_where($array, function ($row) use ($key, $search) {
+        return in_array( array_get( $row, $key ), $search );
+    });
+}
+
+function getDateNow($timeZone='UTC', $noTime=false)
+{
+    if( $timeZone === 'SP' ){ $timeZone = 'America/Sao_Paulo'; }
+
+    $result = \Carbon\Carbon::now()->setTimezone($timeZone);
+
+   return !$noTime ? $result->toDateTimeString() : $result->toDateString();
+}
+
+/**
+ * 0 - FALSE
+ * 1 - TRUE
+ * @param $char
+ * @return int|null
+ */
+function convert_number_bool($char){
+    $char   = trim( $char );
+    $return = null;
+    switch ( $char ){
+        case null :
+        case FALSE:
+        case '0'  :
+        case 0    : $return = FALSE;break;
+        case TRUE :
+        case 1    : $return = TRUE;break;
+    }
+    return (boolean) $return;
+}
+
+function mask_string( $str, $mask='CELLPHONE' ){
+    $tmp  = $mask;
+    $mask = null;
+
+    if( strlen( $str ) === 10 && $tmp === 'CELLPHONE' ){$tmp='PHONE';}
+
+    switch ( $tmp ){
+        case 'PF'       :
+        case 'CPF'      :$mask = '###.###.###-##';break;
+        case 'PJ'       :
+        case 'CNPJ'     :$mask = '##.###.###/####-##';break;
+        case 'CEP'      :$mask = '#####-###';break;
+        case 'CELLPHONE':$mask = '(##) #####-####';break;
+        case 'PHONE'    :$mask = '(##) ####-####';break;
+    }
+
+    if( !empty( $mask ) ) {
+        $str = str_replace(" ", "", $str);
+        $str = only_number($str);
+        if( !empty( $str ) ){
+            $cont=0;
+            foreach ( str_split( $mask, 1 ) as $loop => $caracter ) {
+                if ($caracter == '#') {
+                    $mask[$loop] = isset( $str[$cont] ) ? $str[$cont] : ' ';
+                    $cont++;
+                }
+            }
+        } else {
+            $mask = $str;
+        }
+    }
+    else {
+        $mask = $str;
+    }
+    return trim( $mask );
+}
+
+if (!function_exists('array_key_first')) {
+    function array_key_first(array $arr) {
+        foreach($arr as $key => $unused) {
+            return $key;
+        }
+        return NULL;
+    }
 }
