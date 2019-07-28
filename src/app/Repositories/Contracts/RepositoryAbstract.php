@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\App;
 abstract class RepositoryAbstract implements RepositoryInterface
 {
     private $model;
+    private $selectFields=[];
 
     function __construct( $modelBind, $model=null )
     {
@@ -32,6 +33,15 @@ abstract class RepositoryAbstract implements RepositoryInterface
     public function set( $campo, $valor )
     {
         $this->model->$campo = $valor;
+
+        return $this;
+    }
+
+    public function setFields($values){
+        $values = !is_array($values) ? explode(',',$values) : $values;
+        foreach ($values AS $row) {
+            $this->selectFields[] = $row;
+        }
 
         return $this;
     }
@@ -90,18 +100,31 @@ abstract class RepositoryAbstract implements RepositoryInterface
 
     public function findBy( $campoUnico, $documento ) {
 
-        $result = $this->getModel()->where($campoUnico,$documento)->first();
+        $buildQuery = $this->getModel()->where($campoUnico,$documento);
+        $this->processSelectFields( $buildQuery );
+        $result     = $buildQuery->first();
+
         if( !is_null($result ) ) {
             $this->model = $result;
         }
+
         return $this;
 
     }
 
     public function findAll( $campo, $documento ) {
 
-        return $this->getModel()->where($campo,$documento)->get()->toArray();
+        $buildQuery = $this->getModel()->where($campo,$documento);
+        $this->processSelectFields( $buildQuery );
+        $return     = $buildQuery->get()->toArray();
+        return $return;
 
+    }
+
+
+    private function processSelectFields(&$buildQuery){
+        $buildQuery->select( empty( $this->selectFields ) ? '*' : $this->selectFields );
+        $this->selectFields = [];
     }
 
     public function all(){

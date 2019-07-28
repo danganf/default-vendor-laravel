@@ -1,5 +1,9 @@
 <?php
 
+function lang( $string, $local='auth' ){
+    return \Lang::get($local.'.'.$string);
+}
+
 function msgJson($array,$code=200,$addHeader=[])
 {
     $header = getAllowOrigins();
@@ -17,7 +21,7 @@ function msgJson($array,$code=200,$addHeader=[])
 
 function msgErroJson($msg,$code=400) {
 
-    if( empty( \Request::header('X-Content-Type-Return') ) ) {
+    if( empty( \Request::header('X-DreamFactory-API-Key') ) ) {
         $header = getAllowOrigins();
         $header['Content-Type'] = 'application/json';
         return response()->json(['error' => 1, 'messages' => $msg], $code, $header);
@@ -653,7 +657,7 @@ function search_in_array($array, $key, $search)
     });
 }
 
-function getDateNow($timeZone='UTC', $noTime=false)
+function getDateNow($timeZone='SP', $noTime=false)
 {
     if( $timeZone === 'SP' ){ $timeZone = 'America/Sao_Paulo'; }
 
