@@ -2,6 +2,8 @@
 
 namespace Danganf\Repositories\Contracts;
 
+use Danganf\MyClass\Json\Contracts\JsonAbstract;
+
 interface RepositoryInterface
 {
     public function set( $campo, $valor );
@@ -26,7 +28,7 @@ interface RepositoryInterface
 
     public function increment( $campo );
 
-    public function createOrUpdate( $arrayValores );
+    public function createOrUpdate( JsonAbstract $arrayValores, $id );
 
     public function fails();
 

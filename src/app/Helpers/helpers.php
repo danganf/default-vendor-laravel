@@ -1,6 +1,6 @@
 <?php
 
-function lang( $string, $local='auth' ){
+function lang( $string, $local='default' ){
     return \Lang::get($local.'.'.$string);
 }
 

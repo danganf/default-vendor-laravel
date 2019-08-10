@@ -68,9 +68,14 @@ abstract class RepositoryAbstract implements RepositoryInterface
         return $this->model->update( $lista );
     }
 
-    public function delete()
+    public function delete( $key, $uk='id' )
     {
-        return $this->model->delete();
+        $return     = FALSE;
+        $collection = $this->getModel()->where( $uk, $key )->first();
+        if( !empty( $collection ) ){
+            $return = $collection->delete();
+        }
+        return $return;
     }
 
     public function getLastID()
@@ -119,6 +124,11 @@ abstract class RepositoryAbstract implements RepositoryInterface
         $return     = $buildQuery->get()->toArray();
         return $return;
 
+    }
+
+    public function firstOrNew( $value, $field='id' ){
+        $this->bindModel( $this->getModel()->firstOrNew( [ $id => $value ] ) );
+        return $this;
     }
 
 
