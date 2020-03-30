@@ -25,10 +25,10 @@ class Curl{
                 $this->connectionTimeout = $options['connectionTimeout'];
 
             if (!empty($options['json'])) {
-                if (!empty($options['header'])) {
+                /*if (!empty($options['header'])) {*/
                     $options['header'][] = 'Content-Type: application/json';
                     $options['header'][] = 'Content-Length: ' . strlen($options['data']);
-                }
+                /*}*/
             }
 
             if (!empty($options['header'])) {

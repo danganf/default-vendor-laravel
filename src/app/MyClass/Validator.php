@@ -92,21 +92,11 @@ class Validator
     private function columnPasswordRepeat(){$this->rules['password_repeat'] = 'required|min:5|max:20';}
     private function columnTrace()         {$this->rules['trace']           = 'required|min:5';}
     private function columnStatus()        {$this->rules['status']          = 'required|boolean';}
-    private function columnIsInput()       {$this->rules['is_input']        = 'required|boolean';}
-    private function columnInApp()         {$this->rules['in_app']          = 'required|boolean';}
-    private function columnOrdain()        {$this->rules['ordain']          = 'required|integer';}
-    private function columnQtyReady()      {$this->rules['qty_ready']       = 'required|integer';}
-    private function columnUnitId()        {$this->rules['unit_id']         = 'required|integer';}
-    private function columnPriority()      {$this->rules['priority']        = 'required|integer';}
     private function columnEmail()         {$this->rules['email']           = 'required|email';}
     private function columnMethod()        {$this->rules['method']          = 'required|in:POST,GET,PUT,DELETE,PATCH';}
     private function columnCellphone()     {$this->rules['cellphone']       = 'required|min:10|max:11';}
     private function columnTelephone()     {$this->rules['telephone']       = 'required|min:10|max:11';}
-    private function columnPhone()         {$this->rules['phone']           = 'required|min:10|max:14';}
     private function columnState()         {$this->rules['state']           = 'required|min:2|max:2';}
-    private function columnItems()         {$this->rules['items']           = 'required|array';}
-    private function columnTags()          {$this->rules['tags']            = 'required|array';}
-    private function columnCategories()    {$this->rules['categories']      = 'required|array';}
 
     public function setRule($field, $express)   {$this->rules[$field]   = $express;}
     public function setMessage($field, $message){$this->message[$field] = $message;}

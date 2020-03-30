@@ -12,11 +12,9 @@ function msgJson($array,$code=200,$addHeader=[])
     if( !empty( $addHeader ) ){
         $header = array_merge( $header, $addHeader );
     }
-    if( !empty( $array ) ) {
-        return response()->json($array, $code, $header);
-    }
 
-    return msgErroJson(\Lang::get('default.registers_not_found'), 404);
+    return response()->json($array, $code, $header);
+
 }
 
 function msgErroJson($msg,$code=400) {
@@ -530,7 +528,7 @@ function format_number($valor, $decimal=0, $money=false){
     return number_format($valor,$decimal, $dec_point, $thousands_sep);
 }
 
-function convert_price_in_row($row=[], $fields=['final_price','grand_total','discount_price','special_price', 'price']){
+function convert_price_in_row($row=[], $fields=['final_price','grand_total','discount','special_price', 'price']){
     foreach ( $fields as $field ){
         if( is_array( $row ) ) {
             if (key_exists($field, $row) && !is_null( $row[$field] ) ) {
@@ -621,7 +619,15 @@ function multiRenameKey(&$array, $old_keys, $new_keys,$processData=false,$format
 
 function convert_string_float($value)
 {
-    return !is_float( $value ) ? (float)str_replace(['.',','],['','.'],$value) : $value;
+    if( !is_float( $value ) ) {
+        if( strpos( $value, ',' ) !== FALSE ) {
+            $value = str_replace(['.', ','], ['', '.'], $value);
+        }
+
+        $value = (float) $value;
+    }
+
+    return $value;
 }
 
 function create_qr_code($arrayValue=[])
